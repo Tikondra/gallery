@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Gallery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.min.css">
+</head>
+<body>
+  <main>
+    <section class="gallery">
+      <form class="gallery__form" action="" method="post">
+        <label class="gallery__label" for="address">Введите URL</label>
+        <input class="gallery__url" type="url" name="address" id="address">
+        <button type="submit">Загрузить</button>
+        <p>или</p>
+        <input class="gallery__load" type="file" name="load" id="load">
+      </form>
+      <div class="gallery__list">
+      </div>
+    </section>
+  </main>
+  <script src="js/gallery.js"></script>
+</body>
+</html>
