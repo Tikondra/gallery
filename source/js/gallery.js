@@ -1,60 +1,56 @@
 (function () {
-  var FILE_TYPES = ['json'];
-  var HEIGHT__BASE = 170;
-  var fileChooser = document.querySelector('input[type=file]');
-  var fileLoad = document.querySelector('input[type=url]');
-  var imgList = document.querySelector('.gallery__list');
-  var form = document.querySelector('form');
+  const FILE_TYPES = ['json'];
+  const HEIGHT__BASE = 170;
+  let fileChooser = document.querySelector('input[type=file]');
+  let fileLoad = document.querySelector('input[type=url]');
+  let imgList = document.querySelector('.gallery__list');
+  let form = document.querySelector('form');
 
-  // отрисовка картинок
-  var renderImg = function (data) {
-    var fragment = document.createDocumentFragment();
-    data.galleryImages.forEach(function (it) {
-      var galleryImg = document.createElement('img');
-      var ratio = it.width / it.height;
-      var widthBase = ratio * HEIGHT__BASE;
+  let renderImg = function (data) {
+    let fragment = document.createDocumentFragment();
+    data.galleryImages.forEach(function (image) {
+      let galleryImg = document.createElement('img');
+      let ratio = image.width / image.height;
+      let widthBase = ratio * HEIGHT__BASE;
       galleryImg.classList.add('gallery__img');
-      galleryImg.src = it.url;
+      galleryImg.src = image.url;
       galleryImg.width = widthBase;
       galleryImg.height = HEIGHT__BASE;
       fragment.append(galleryImg);
     });
     imgList.append(fragment);
   };
-  // очистка перед отрисовкой
-  var cleaningImg = function () {
-    var activeImg = document.querySelectorAll('.gallery__img');
+  let cleaningImg = function () {
+    let activeImg = document.querySelectorAll('.gallery__img');
     if (activeImg) {
-      activeImg.forEach(function (it) {
-        it.remove();
+      activeImg.forEach(function (img) {
+        img.remove();
       })
     }
   };
-  // загрузка через файл
-  var onLoadFile = function () {
-    var file = fileChooser.files[0];
-    var fileName = file.name.toLowerCase();
+  let onLoadFile = function (evt) {
+    let file = fileChooser.files[0];
+    let fileName = file.name.toLowerCase();
 
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
+    let matches = FILE_TYPES.some(function (item) {
+      return fileName.endsWith(item);
     });
     if (matches) {
-      var reader = new FileReader();
+      let reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        var gallery = (JSON.parse(reader.result));
+        let gallery = (JSON.parse(reader.result));
         cleaningImg();
         renderImg(gallery);
       });
       reader.readAsText(file);
-      fileChooser.style.border = 'none';
+      evt.target.style.border = 'none';
     } else {
-      fileChooser.style.border = '1px solid red';
+      evt.target.style.border = '1px solid red';
     }
   };
-  // загрузка через ссылку
-  var load = function (onLoad) {
-    var xhr = new XMLHttpRequest();
+  let load = function (onLoad) {
+    let xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
@@ -71,6 +67,8 @@
   fileChooser.addEventListener('change', onLoadFile);
   form.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    load(renderImg);
+    if (fileLoad.value) {
+      load(renderImg);
+    }
   });
 })();

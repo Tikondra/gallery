@@ -9,11 +9,7 @@ var gulp         = require('gulp'),
     sass         = require('gulp-sass'),
     postcss      = require('gulp-postcss'),
     autoprefixer = require('autoprefixer'),
-    csso         = require('gulp-csso'),
-    imagemin     = require('gulp-imagemin'),
-    htmlmin      = require("gulp-htmlmin"),
-    uglify       = require("gulp-uglify");
-
+    csso         = require('gulp-csso');
 
 gulp.task('css', function () {
   return gulp.src("source/sass/style.scss")
@@ -40,9 +36,8 @@ gulp.task('server', function () {
   });
 
   gulp.watch('source/sass/**/*.scss', gulp.series('css'));
-  gulp.watch('source/img/icon-*.svg', gulp.series('html', 'refresh'));
-  gulp.watch('source/js/*.js', gulp.series('copy', 'js', 'refresh'));
-  gulp.watch('source/*.html', gulp.series('html', 'refresh'));
+  gulp.watch('source/js/*.js', gulp.series('copy', 'refresh'));
+  gulp.watch('source/*.html', gulp.series('copy', 'refresh'));
 });
 
 gulp.task('refresh', function (done) {
@@ -50,29 +45,10 @@ gulp.task('refresh', function (done) {
   done();
 });
 
-gulp.task('images', function () {
-  return gulp.src('source/img/**/*.{png,jpg,svg}')
-    .pipe(imagemin([
-      imagemin.optipng({optimizationLevel: 3}),
-      imagemin.jpegtran({progressive: true}),
-      imagemin.svgo()
-    ]))
-    .pipe(gulp.dest('source/img'));
-});
-
-gulp.task('html', function () {
-  return gulp.src('source/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest('build'));
-});
-
 gulp.task('copy', function () {
   return gulp.src([
-    'source/fonts/**/*.{woff,woff2}',
-    'source/img/**',
     'source/js/**',
-    'source/css/**',
-    'source/*.ico'
+    'source/*.html',
   ], {
     base: 'source'
   })
@@ -83,14 +59,5 @@ gulp.task('clean', function () {
   return del('build');
 });
 
-gulp.task("js", function () {
-  return gulp.src("source/js/**/*.js")
-    .pipe(uglify())
-    .pipe(rename(function (path) {
-      path.basename += ".min"
-    }))
-    .pipe(gulp.dest("build/js"))
-});
-
-gulp.task('build', gulp.series('clean', 'copy', 'css', 'html'));
+gulp.task('build', gulp.series('clean', 'copy', 'css'));
 gulp.task('start', gulp.series('build', 'server'));

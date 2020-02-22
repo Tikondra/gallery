@@ -3,17 +3,3 @@
   padding: 0;
   list-style: none;
 }
-
-@mixin center-flex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-@mixin container {
-  max-width: 1440px;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 25px;
-  padding-left: 25px;
-}
