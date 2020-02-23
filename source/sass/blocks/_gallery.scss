@@ -14,11 +14,17 @@
 .gallery__list {
   @include list;
   display: flex;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 
 .gallery__img {
   margin: 5px;
-  flex-grow: 1;
   max-width: 97%;
+}
+
+@media (max-width: 390px) {
+  .gallery__img {
+    flex-grow: 1 !important;
+  }
 }

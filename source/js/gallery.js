@@ -1,6 +1,6 @@
 (function () {
-  const FILE_TYPES = ['json'];
-  const HEIGHT__BASE = 170;
+  const fileTypes = ['json'];
+  const heightBase = 170;
   let fileChooser = document.querySelector('input[type=file]');
   let fileLoad = document.querySelector('input[type=url]');
   let imgList = document.querySelector('.gallery__list');
@@ -11,11 +11,13 @@
     data.galleryImages.forEach(function (image) {
       let galleryImg = document.createElement('img');
       let ratio = image.width / image.height;
-      let widthBase = ratio * HEIGHT__BASE;
+      let widthBase = ratio * heightBase;
+
       galleryImg.classList.add('gallery__img');
       galleryImg.src = image.url;
       galleryImg.width = widthBase;
-      galleryImg.height = HEIGHT__BASE;
+      galleryImg.height = heightBase;
+      galleryImg.style.flexGrow = ratio;
       fragment.append(galleryImg);
     });
     imgList.append(fragment);
@@ -32,7 +34,7 @@
     let file = fileChooser.files[0];
     let fileName = file.name.toLowerCase();
 
-    let matches = FILE_TYPES.some(function (item) {
+    let matches = fileTypes.some(function (item) {
       return fileName.endsWith(item);
     });
     if (matches) {
