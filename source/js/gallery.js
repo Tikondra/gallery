@@ -30,6 +30,30 @@
       })
     }
   };
+  let cleaningForm = function () {
+    let errorMessage = document.querySelector('.gallery__error');
+    if(errorMessage) {
+      errorMessage.remove();
+    }
+    form.reset();
+  };
+  let errorLoad = function () {
+    fileLoad.style.borderColor = "red";
+    let error = document.createElement('span');
+    error.classList.add('gallery__error');
+    error.textContent = 'Произошла ошибка';
+    fileLoad.after(error);
+  };
+  let onValidationUrl = function (evt) {
+    if (!evt.target.value.endsWith(fileTypes)) {
+      evt.target.setCustomValidity('Только json');
+      return false;
+    } else {
+      evt.target.setCustomValidity('');
+      return true;
+    }
+  };
+  /** загрузка через файл */
   let onLoadFile = function (evt) {
     let file = fileChooser.files[0];
     let fileName = file.name.toLowerCase();
@@ -44,6 +68,7 @@
         let gallery = (JSON.parse(reader.result));
         cleaningImg();
         renderImg(gallery);
+        cleaningForm();
       });
       reader.readAsText(file);
       evt.target.style.border = 'none';
@@ -51,15 +76,18 @@
       evt.target.style.border = '1px solid red';
     }
   };
-  let load = function (onLoad) {
+  /** загрузка черенз url */
+  let onLoadUrl = function (evt) {
+    evt.preventDefault();
     let xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        onLoad(xhr.response);
-        fileLoad.style.borderColor = "#000";
+        renderImg(xhr.response);
+        fileLoad.style.border = "1px solid rgb(227, 227, 227)";
+        cleaningForm();
       } else {
-        fileLoad.style.borderColor = "red";
+        errorLoad();
       }
     });
     xhr.open('GET', fileLoad.value);
@@ -67,10 +95,6 @@
   };
 
   fileChooser.addEventListener('change', onLoadFile);
-  form.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    if (fileLoad.value) {
-      load(renderImg);
-    }
-  });
+  fileLoad.addEventListener('blur', onValidationUrl);
+  form.addEventListener('submit', onLoadUrl);
 })();

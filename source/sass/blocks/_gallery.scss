@@ -23,6 +23,11 @@
   max-width: 97%;
 }
 
+.gallery__error {
+  font-size: 14px;
+  color: red;
+}
+
 @media (max-width: 390px) {
   .gallery__img {
     flex-grow: 1 !important;
